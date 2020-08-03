@@ -60,7 +60,10 @@ def upcoming():
 
 @app.route('/current')
 def current():
-    return render_template("current_movies.html")
+    cur_movies = Movie.query.filter_by(status='running').group_by(Movie.movie_name).all()
+    result = movies_schema.dump(cur_movies)
+    # print( result )
+    return render_template( "current_movies.html", result=result )
 
 @app.route('/search')
 def search():

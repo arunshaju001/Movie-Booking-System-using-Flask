@@ -5,10 +5,12 @@
         <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
     </head>
     <body>
-        <center><h1>Welcome to Movie Booking</h1><br>
+        <center><h1>Movie Booking</h1><br>
             <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
             <a href="{{ url_for('current') }}" ><button type="button" >Currently Playing</button></a>
             <a href="{{ url_for('search') }}" ><button type="button" >Search Movies</button></a>
+            <br><br>
+            <p><h2>Welcome to our Movie Booking platform...</h2></p>
         </center>   
     </body>
 </html>

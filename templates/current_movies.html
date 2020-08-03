@@ -5,11 +5,33 @@
         <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
     </head>
     <body>
-        <center><h1>Currently Playing</h1><br>
+        <center><h1>Now Playing</h1><br>
             <a href="{{ url_for('index') }}" ><button type="button" >Home</button></a>
             <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
             <a href="{{ url_for('search') }}" ><button type="button" >Search Movies</button></a>
        
-        </center>   
+        </center>   <br><br><br>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Movie Name</th>
+                <th scope="col">Theaters</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <!-- Construct the rest of courses here -->
+            {% for movie in result %}
+            <tr>
+                <td scope='row'>{{ movie['movie_name'] }}</td>
+                <td>
+                    <form action="{{url_for('theaters')}}" method="POST">
+                        <input type="hidden" name="movie_name" value="{{ movie['movie_name'] }}" >
+                    <button>View Theaters</button></form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </body>
 </html>
