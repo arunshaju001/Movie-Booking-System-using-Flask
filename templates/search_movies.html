@@ -9,6 +9,30 @@
             <a href="{{ url_for('index') }}" ><button type="button" >Home</button></a>
             <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
             <a href="{{ url_for('current') }}" ><button type="button" >Currently Playing</button></a>
-        </center>   
+        </center>  <br><br><br>
+            {% if result %}
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Movie Name</th>
+                        <th scope="col">Theaters</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                    <tr>
+                        <td scope='row'>{{ result['movie_name'] }}</td>
+                        <td>
+                            <form action="{{url_for('theaters')}}" method="POST">
+                                <input type="hidden" name="movie_name" value="{{ result['movie_name'] }}" >
+                            <button>View Theaters</button></form>
+                        </td>
+                    </tr>
+            {% else %}
+                <p><h2><center style="color:rgb(197, 58, 58) " >Movie not found....check spelling and try again!!!</center></h2></p>
+                    
+                    </tbody>
+                </table>
+            {% endif %}
     </body>
 </html>

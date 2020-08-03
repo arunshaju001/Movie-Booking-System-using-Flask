@@ -65,9 +65,12 @@ def current():
     # print( result )
     return render_template( "current_movies.html", result=result )
 
-@app.route('/search')
+@app.route('/search', methods=['POST'])
 def search():
-    return render_template("search_movies.html")
+    movie_name= request.form['search_item']
+    movie = Movie.query.filter_by(movie_name=movie_name).first()
+    result = movie_schema.dump(movie)
+    return render_template("search_movies.html", result=result)
 
 @app.route('/theaters', methods=['POST'])
 def theaters():
