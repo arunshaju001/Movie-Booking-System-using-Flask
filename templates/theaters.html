@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
     </head>
     <body>
-        <center><h1>Theaters</h1><br>
+        <center><h1>Theaters showing {{movie_name}}</h1><br>
             <a href="{{ url_for('index') }}" ><button type="button" >Home</button></a>
             <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
             <a href="{{ url_for('current') }}" ><button type="button" >Currently Playing</button></a>
@@ -16,6 +16,7 @@
             <tr>
                 <th scope="col">Theater Name</th>
                 <th scope="col">Available Tickets</th>
+                <th scope="col">Book seats</th>
             </tr>
             </thead>
             <tbody>
@@ -25,7 +26,12 @@
             <tr>
                 <td scope='row'>{{ movie['theater_name'] }}</td>
                 <td>{{ movie['available_tickets']  }}</td>
-                
+                <td>
+                    <form action="{{url_for('booking')}}" method="POST">
+                        <input type="hidden" name="movie_name" value="{{  movie['movie_name'] }}" >
+                        <input type="hidden" name="theater_name" value="{{  movie['theater_name'] }}" >
+                    <button>Book tickets</button></form>
+                </td>
             </tr>
             {% endfor %}
             </tbody>

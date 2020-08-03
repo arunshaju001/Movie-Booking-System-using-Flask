@@ -2,5 +2,17 @@
 <title>Invoice</title>
 <link rel=stylesheet href="{{ url_for('static', filename='style.css') }}" />
 
-<p>Invoice for movie booking</p>
-Recipient Name : {{ name }}
+<p><div style="font-size: xx-large; font-weight: bolder;">Invoice for movie booking</div></p>
+<br>
+<div style="font-weight: bold;">
+Recipient Name : {{ name }}<br><br>
+Movie Name : {{ movie_name }}<br><br>
+Theater Name : {{ theater_name }}<br><br>
+Total seats booked : {{ num_seats }}<br><br>
+Seat number : {{ seats }}<br>
+______________________________________________________________________________<br>
+<br>
+<span style="float: right;">
+Total Amount : Rs. <span style="font-size: large; font-weight: bolder;">{{ amount }}</span> Only</span>
+
+</div>

@@ -78,7 +78,15 @@ def theaters():
     movie_name = request.form['movie_name']
     theaters_list = Movie.query.filter_by(movie_name=movie_name).all()
     result = movies_schema.dump(theaters_list)
-    return render_template("theaters.html", result=result)
+    return render_template("theaters.html", result=result, movie_name = movie_name)
+
+@app.route('/booking', methods=['POST'])
+def booking():
+    movie_name = request.form['movie_name']
+    theater_name = request.form['theater_name']
+    # theaters_list = Movie.query.filter_by(movie_name=movie_name).all()
+    # result = movies_schema.dump(theaters_list)
+    return render_template("seat_select.html",theater_name=theater_name, movie_name=movie_name)
 
 @app.route('/add_movie', methods=['POST'])
 def add_movie():
@@ -175,10 +183,15 @@ def remove_planet(planet_id:int):
     else:
         return jsonify(message="planet doesnot exist"), 404
 
-@app.route('/invoice', methods=['GET'])  #@Vidhwan
+@app.route('/invoice', methods=['POST'])  #@Vidhwan
 def invoice():
-    # Make a PDF straight from HTML in a string.
-    html = render_template('pdf.html', name='Divin')
+    movie_name = request.form['movie_name']
+    theater_name = request.form['theater_name']
+    seats = request.form['ss']
+    name = request.form['name']
+    num_seats = request.form['num_seats']
+    amount = 115.12*float(num_seats)
+    html = render_template('pdf.html', name=name, movie_name = movie_name, theater_name=theater_name, seats=seats,amount=amount, num_seats=num_seats)
     pdf = render_pdf(HTML(string=html))
     return pdf
 
