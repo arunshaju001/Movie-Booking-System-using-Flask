@@ -10,14 +10,12 @@
             <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
             <a href="{{ url_for('search') }}" ><button type="button" >Search Movies</button></a>
        
-        </center>   
+        </center>   <br><br><br>
         <table class="table table-hover">
             <thead>
             <tr>
                 <th scope="col">Theater Name</th>
-                <th scope="col">Show Time</th>
                 <th scope="col">Available Tickets</th>
-                <th scope="col">Location</th>
             </tr>
             </thead>
             <tbody>
@@ -26,14 +24,8 @@
             {% for movie in result %}
             <tr>
                 <td scope='row'>{{ movie['theater_name'] }}</td>
-                <td>{{ movie['show_time']  }}</td>
-                <td>{{ movie['show_time']  }}</td>
-                <td>{{ movie['show_time']  }}</td>
-                <td>
-                    <form action="{{url_for('theaters')}}" method="POST">
-                        <input type="hidden" name="movie_name" value="{{ movie['movie_name'] }}" >
-                    <button>View Theaters</button></form>
-                </td>
+                <td>{{ movie['available_tickets']  }}</td>
+                
             </tr>
             {% endfor %}
             </tbody>
