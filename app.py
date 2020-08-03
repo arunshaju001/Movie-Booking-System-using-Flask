@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float
 from flask_marshmallow import Marshmallow
-import os
+import os, json
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from flask_mail import Mail, Message
 
@@ -23,6 +23,7 @@ ma = Marshmallow(app)
 jwt = JWTManager(app)
 mail = Mail(app)
 
+# database
 @app.cli.command('db_create')
 def db_create():
     db.create_all()
@@ -35,12 +36,15 @@ def db_drop():
 
 @app.cli.command('db_seed')
 def db_seed():
-    jalebi = Movie(movie_name='Jalebi',location='Delhi',show_time='noon',theater_id=1111,theater_name= 'deva',total_tickets= 50,available_tickets=25,ticket_price =100,status= 'upcoming',release= '03/08/2020' )
+    jalebi = Movie(movie_name='Jalebi',location='Delhi',show_time='noon',theater_id=1111,
+        theater_name= 'deva',total_tickets= 50,available_tickets=25,ticket_price =100,
+        ticket_dict={ "0001":'Booked', "0002":'Vacant', "0003":'Booked', "0004":'Vacant', "0005":'Booked', "0006":'Vacant'},
+         status= 'upcoming',release= '03/08/2020' )
     db.session.add(jalebi)
     db.session.commit()
     print('database seeded')
 
-
+# Routing
 @app.route('/')
 @app.route('/home')
 @app.route('/index')
@@ -49,8 +53,9 @@ def index():
 
 @app.route('/upcoming')
 def upcoming():
-    up_movies = Movie.query.filter_by(status='upcoming').all()
+    up_movies = Movie.query.filter_by(status='upcoming').group_by(Movie.movie_name).all()
     result = movies_schema.dump(up_movies)
+    print( result )
     return render_template("upcoming_movies.html",result=result)
 
 @app.route('/current')
@@ -68,32 +73,27 @@ def theaters():
     result = movies_schema.dump(theaters_list)
     return render_template("theaters.html", result=result)
 
-@app.route('/url_variables/<string:name>/<int:age>')
-def url_variables(name: str,age: int ):
-    if(age < 18):
-        return  jsonify(message='Sorry '+name+", not old enough"),401
-    return jsonify(message='Welcome '+name+", you are old enough")
+@app.route('/add_movie', methods=['POST'])
+def add_movie():
+    movie_name = request.json['movie_name']
+    location = request.json['location']
+    show_time = request.json['show_time']
+    theater_id = request.json['theater_id']
+    theater_name = request.json['theater_name']
+    total_tickets = request.json['total_tickets']
+    available_tickets = request.json['available_tickets']
+    ticket_price = request.json['ticket_price'] 
+    ticket_dict = request.json['ticket_dict']
+    status = request.json['status']
+    release = request.json['release']
 
-@app.route('/planets', methods=['GET'])
-def planets():
-    planets_list=Planet.query.all()
-    result = planets_schema.dump(planets_list)
-    return jsonify(result)
+    movie = Movie(movie_name=movie_name,location=location,show_time=show_time,theater_id=theater_id,
+        theater_name= theater_name,total_tickets= total_tickets,available_tickets=available_tickets,ticket_price =ticket_price,
+        ticket_dict=ticket_dict, status= status,release=release )
 
-@app.route('/register', methods=['POST'])
-def register():
-    email= request.form['email']
-    test = User.query.filter_by(email=email).first()
-    if test :
-        return jsonify(message="That email already exists"), 409
-    else:
-        first_name= equest.form['first_name']
-        last_name=request.form['last_name']
-        password=request.form['password']
-        user= User(first_name=first_name, last_name=last_name, email=email, password=password)
-        db.session.add(user)
-        db.session.commit()
-        return jsonify(message="User Created Sucessfully"), 201
+    db.session.add(movie)
+    db.session.commit()
+    return jsonify(message="Movie Added Sucessfully..."), 201
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -120,15 +120,6 @@ def retrieve_password(email:str):
         return jsonify(message="password sent to" + email)
     else:
         return jsonify(message="email doesn't exist"), 401
-
-@app.route('/planet_details/<int:planet_id>', methods=['GET'])
-def planet_details(planet_id : int):
-    planet=Planet.query.filter_by(planet_id=planet_id).first()
-    if planet:
-        result= planet_schema.dump(planet)
-        return jsonify(result)
-    else:
-        return jsonify("planet doesn't exist"), 404
 
 @app.route('/add_planet', methods=['POST'])
 @jwt_required
@@ -180,6 +171,23 @@ def remove_planet(planet_id:int):
 
 
 # database models
+
+class JsonEncodedDict(db.TypeDecorator):
+    """Enables JSON storage by encoding and decoding on the fly."""
+    impl = db.Text
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return '{}'
+        else:
+            return json.dumps(value)
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return {}
+        else:
+            return json.loads(value)
+
 class User(db.Model):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
@@ -201,6 +209,7 @@ class Movie(db.Model):
     total_tickets = Column(Integer)
     available_tickets = Column(Integer)
     ticket_price = Column(Integer)  
+    ticket_dict = Column(JsonEncodedDict)
     status = Column(String)
     release = Column(String)
 
