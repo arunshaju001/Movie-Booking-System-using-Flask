@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Movie Booking</title>
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
+    </head>
+    <body>
+        <center><h1>Upcoming Movies</h1><br>
+            <a href="{{ url_for('index') }}" ><button type="button" >Home</button></a>
+            <a href="{{ url_for('current') }}" ><button type="button" >Currently Playing</button></a>
+            <a href="{{ url_for('search') }}" ><button type="button" >Search Movies</button></a>
+        </center>   <br><br><br>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Movie Name</th>
+                <th scope="col">Release Date</th>
+                <th scope="col">Theaters</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <!-- Construct the rest of courses here -->
+            {% for movie in result %}
+            <tr>
+                <td scope='row'>{{ movie['movie_name'] }}</td>
+                <td>{{ movie['release']  }}</td>
+                <td>
+                    <form action="{{url_for('theaters')}}" method="POST">
+                        <input type="hidden" name="movie_name" value="{{ movie['movie_name'] }}" >
+                    <button>View Theaters</button></form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

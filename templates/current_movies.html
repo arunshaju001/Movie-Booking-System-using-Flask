@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Movie Booking</title>
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
+    </head>
+    <body>
+        <center><h1>Currently Playing</h1><br>
+            <a href="{{ url_for('index') }}" ><button type="button" >Home</button></a>
+            <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
+            <a href="{{ url_for('search') }}" ><button type="button" >Search Movies</button></a>
+       
+        </center>   
+    </body>
+</html>
