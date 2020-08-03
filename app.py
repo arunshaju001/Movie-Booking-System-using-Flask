@@ -8,6 +8,7 @@ from flask_mail import Mail, Message
 from flask_weasyprint import HTML, render_pdf
 
 app = Flask(__name__)
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///'+os.path.join(basedir,'planets.db')
 app.config['JWT_SECRET_KEY'] = 'super-secret'  #change this IRL
@@ -56,7 +57,7 @@ def index():
 def upcoming():
     up_movies = Movie.query.filter_by(status='upcoming').group_by(Movie.movie_name).all()
     result = movies_schema.dump(up_movies)
-    print( result )
+    # print( result )
     return render_template("upcoming_movies.html",result=result)
 
 @app.route('/current')

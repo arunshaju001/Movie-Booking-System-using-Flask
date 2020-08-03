@@ -21,7 +21,7 @@
                     <tbody>
                     
                     <tr>
-                        <td scope='row'>{{ result['movie_name'] }}</td>
+                        <td scope='row'><b>{{ result['movie_name'] }}</b></td>
                         <td>
                             <form action="{{url_for('theaters')}}" method="POST">
                                 <input type="hidden" name="movie_name" value="{{ result['movie_name'] }}" >
