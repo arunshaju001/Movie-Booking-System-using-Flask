@@ -3,14 +3,21 @@
     <head>
         <title>Movie Booking</title>
         <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
         <center><h1>Movie Booking</h1><br>
             <a href="{{ url_for('upcoming') }}" ><button type="button" >Upcoming Movies</button></a>
             <a href="{{ url_for('current') }}" ><button type="button" >Currently Playing</button></a>
-            <a href="{{ url_for('search') }}" ><button type="button" >Search Movies</button></a>
             <br><br>
             <p><h2>Welcome to our Movie Booking platform...</h2></p>
+          <br><br>
+        <div class="search-container">
+            <form action="{{ url_for('search') }}" method="POST">
+              <input type="text" placeholder="Search Movies.." name="search_item" class="search" >
+              <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>  
         </center>   
     </body>
 </html>

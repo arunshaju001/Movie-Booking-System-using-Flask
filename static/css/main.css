@@ -53,3 +53,11 @@ th {
     background-color: #555a55;
     color: white;
   }
+
+  
+ .search {
+  border: 1px solid grey;
+  height: 46px;
+  padding: 2px 23px 2px 30px;
+  font-size: 16px;
+}
