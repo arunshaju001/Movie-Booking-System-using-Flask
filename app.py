@@ -5,6 +5,7 @@ from flask_marshmallow import Marshmallow
 import os, json
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from flask_mail import Mail, Message
+from flask_weasyprint import HTML, render_pdf
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -171,6 +172,12 @@ def remove_planet(planet_id:int):
     else:
         return jsonify(message="planet doesnot exist"), 404
 
+@app.route('/invoice', methods=['GET'])  #@Vidhwan
+def invoice():
+    # Make a PDF straight from HTML in a string.
+    html = render_template('pdf.html', name='Divin')
+    pdf = render_pdf(HTML(string=html))
+    return pdf
 
 
 # database models
